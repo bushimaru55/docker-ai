@@ -18,7 +18,18 @@ export class AnalysisController {
 
       // Ollamaで分析を実行
       const analysisResult = await ollamaService.analyze({ prompt, data });
-      const parsedResult = JSON.parse(analysisResult);
+      console.log('Ollama raw response:', analysisResult);
+      let parsedResult;
+      try {
+        // 最初のJSONブロックのみ抽出
+        const match = analysisResult.match(/\{[\s\S]*\}/);
+        if (!match) throw new Error('No JSON block found in Ollama response');
+        parsedResult = JSON.parse(match[0]);
+      } catch (parseError) {
+        console.error('Failed to parse Ollama response as JSON:', parseError, analysisResult);
+        res.status(502).json({ error: 'Ollama response is not valid JSON', raw: analysisResult });
+        return;
+      }
 
       // 分析結果を保存
       const result = analysisRepository.create({

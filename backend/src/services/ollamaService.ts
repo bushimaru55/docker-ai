@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { config } from 'dotenv';
+
+config();
 
 const OLLAMA_API_URL = process.env.OLLAMA_API_URL || 'http://ollama:11434';
 
@@ -9,7 +12,7 @@ export interface AnalysisRequest {
 
 export class OllamaService {
   private static instance: OllamaService;
-  private model: string = 'llama2';
+  private model: string = 'llama3:latest';
 
   private constructor() {}
 
@@ -22,7 +25,7 @@ export class OllamaService {
 
   public async analyze(request: AnalysisRequest): Promise<string> {
     try {
-      const response = await axios.post(`${OLLAMA_API_URL}/api/generate`, {
+      const response = await axios.post<{ response: string }>(`${OLLAMA_API_URL}/api/generate`, {
         model: this.model,
         prompt: this.buildPrompt(request),
         stream: false,
