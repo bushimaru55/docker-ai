@@ -12,7 +12,6 @@ export interface AnalysisRequest {
 
 export class OllamaService {
   private static instance: OllamaService;
-  private model: string = 'llama3.2:1b';
 
   private constructor() {}
 

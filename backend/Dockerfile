@@ -1,9 +1,12 @@
-FROM node:20-bookworm
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
-# OSパッケージのアップデートと依存インストール
-RUN apt-get update && apt-get upgrade -y && apt-get install -y python3 make g++ sqlite3 && apt-get clean
+# セキュリティアップデートと最小限の依存インストール
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends python3 make g++ sqlite3 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 
@@ -22,7 +25,9 @@ COPY . .
 RUN npm run build
 
 # 不要なビルド依存の削除
-RUN apt-get remove --purge -y make g++ python3 && apt-get autoremove -y && apt-get clean
+RUN apt-get update && apt-get remove --purge -y make g++ python3 && \
+    apt-get autoremove -y && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 3001
 
