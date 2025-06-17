@@ -9,12 +9,22 @@ interface AnalysisResultProps {
     text: string;
     graphs?: {
       type: string;
+      title?: string;
       data: any;
     }[];
   };
 }
 
 export default function AnalysisResult({ result }: AnalysisResultProps) {
+  console.log('[DEBUG] AnalysisResult received:', {
+    hasText: !!result.text,
+    textLength: result.text?.length || 0,
+    hasGraphs: !!result.graphs,
+    graphsCount: result.graphs?.length || 0,
+    firstGraphType: result.graphs?.[0]?.type,
+    result: result
+  });
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -40,7 +50,7 @@ export default function AnalysisResult({ result }: AnalysisResultProps) {
                   },
                   title: {
                     display: true,
-                    text: graph.data.title,
+                    text: graph.title || `グラフ ${index + 1}`,
                   },
                 },
               }}

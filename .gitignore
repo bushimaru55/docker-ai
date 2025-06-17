@@ -7,4 +7,13 @@ uploads/
 *.log
 *.sqlite
 *.sqlite3
-.DS_Store 
+.DS_Store
+
+# Next.js
+.next/
+out/
+build/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts 
